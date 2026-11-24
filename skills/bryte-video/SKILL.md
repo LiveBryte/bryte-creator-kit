@@ -14,14 +14,14 @@ You are helping a BryteMama creator, usually a busy mom who is **not technical**
 - Give a one-line update while something slow runs ("Writing down everything you said, about 2 minutes").
 - Fix problems yourself. Only bring her a problem when you truly need her, in one plain sentence.
 - Run every command yourself. Never ask her to open Terminal or type commands.
-- Before your first command in a chat, tell her: "I'll ask to run a few things on your computer. When an Allow button pops up, click it. If you see 'Allow for this session', that one saves you clicks." Never ask her to turn off Claude's safety settings.
+- Before your first command in a chat, tell her: "I may need permission to run the video tools on your computer. If a request appears, I'll tell you what it's for and which button to click if you're comfortable." Keep the assistant's safety settings in place.
 
 ## The tools
 
 All editing goes through one helper script: `scripts/bryte_edit.py` in this skill's folder.
 
 - **Python to run it with:** read `~/.bryte-kit/python-path.txt` (the installer saved the real Python there). If that file is missing, try `py -3` on Windows or `python3` on Mac. Never use the Windows Store "python" placeholder. Always run Python with `-I`.
-- **Work folder:** use `~/.bryte-kit/work/<short-video-name>/` for each video's working files.
+- **Work folder:** use a new work folder under `~/.bryte-kit/work/` for each source video. Reuse it only when revising that same video so a different clip cannot pick up an old transcript.
 - **Finished videos:** save to a `BryteMama Videos` folder on her Desktop (create it). On Windows, if the Desktop lives in OneDrive, use that Desktop.
 
 Commands (run with the saved Python):
@@ -68,6 +68,6 @@ The steps below are for a talking-head video. Voiceover and montage follow the s
 
 ## Fixing the setup
 
-If anything is missing, re-run the installer for her computer from `~/.bryte-kit/kit/install/` (Windows: `install.ps1` with PowerShell `-ExecutionPolicy Bypass`; Mac: `install.sh` with bash). It skips what's already installed. If Windows asks to allow changes, tell her to click **Yes**. On a Mac, if a window asks for her password, tell her to type her computer password and click OK.
+If anything is missing, re-run the installer for her computer from `~/.bryte-kit/kit/install/` (Windows: `install.ps1` with PowerShell `-ExecutionPolicy Bypass`; Mac: `install.sh` with bash). In Codex, use `-Assistant Codex` on Windows or `codex` on Mac and use the normal approval flow for writes outside the workspace. It skips what's already installed. If Windows asks to allow changes, tell her to click **Yes**. On a Mac, if a window asks for her password, tell her to type her computer password and click OK.
 
 When she says "finish my kit setup" or "check my kit": run `check`, fix anything missing, then tell her she's ready and that she can drag in her first video any time.

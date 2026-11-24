@@ -1,24 +1,37 @@
 # BryteMama Creator Kit
 
-Turns a creator's phone video into a finished, on-brand BryteMama ad inside Claude. Built only on free, shareable tools:
-ffmpeg (video), whisper.cpp (transcription, MIT license), Python, and the Montserrat font (SIL Open Font License).
-No Tesseract, no VideoDatabase or Content Tools, and no account keys inside.
+Turn your phone video into a BryteMama ad with Claude or Codex. The kit cuts pauses, adds a hook and captions, checks your words against the brand rules, and saves the finished video in **BryteMama Videos** on your Desktop.
 
-## What a creator does
-1. Pastes `SETUP-PROMPT.md` into a new Claude chat (desktop app, Code tab). Claude installs everything.
-2. Restarts Claude and types "check my kit".
-3. Drags in a video. Claude checks what she said against the brand rules, offers hooks, and saves the finished
-   video to "BryteMama Videos" on her Desktop.
+## Set up in Codex
 
-## What's in it
-- `skills/bryte-video/SKILL.md` - how Claude walks her through each video
-- `skills/bryte-video/references/yap.md`, `voiceover.md`, `montage.md` - the three formats
-- `skills/bryte-video/references/brand-rules.md` - creator-safe brand and claim rules, plus disclosure (no prices,
-  costs or internal numbers)
-- `skills/bryte-video/scripts/bryte_edit.py` - the editor (cut pauses, hook, captions, remove lines)
-- `install/install.ps1`, `install/install.sh` - Windows and Mac installers (everything lands in `~/.bryte-kit`)
+Open Codex in the ChatGPT desktop app on Windows or Mac. Start a local chat and paste this:
+
+> I'm a BryteMama creator. Please install the BryteMama Creator Kit on this computer from https://github.com/LiveBryte/bryte-creator-kit.
+
+If you pasted the GitHub link by itself and Codex asks what you want to do, reply **Install the BryteMama Creator Kit**. You can also paste the [full setup message](SETUP-PROMPT-CODEX.md).
+
+Codex downloads the kit and runs setup. If it asks for approval, it will explain what it needs. The first setup includes a large download and can take a few minutes.
+
+When setup is done, quit and reopen the desktop app. Start a new local Codex chat and type **check my kit**. If Codex needs help finding the kit, type **$bryte-video check my kit**.
+
+Then drag in your phone video or tell Codex where you saved it. Say **make this ready to post**.
+
+### For Codex
+
+When a creator supplies this URL and asks for setup, follow [SETUP-PROMPT-CODEX.md](SETUP-PROMPT-CODEX.md). It covers fetching the source, choosing the installer and verifying the result. If the creator only supplied a URL, ask whether they want to install the kit before running the installer.
+
+## Set up in Claude
+
+Open [the Claude setup page](https://claude.ai/artifact/WdrMEeiSS5YATHu9RaXFtz) or copy [the Claude setup message](SETUP-PROMPT.md). Paste it into a new chat in the Claude desktop app's Code tab. After setup, restart Claude and type **check my kit**.
+
+## What's in the kit
+
+- [Shared skill](skills/bryte-video/SKILL.md) and [brand rules](skills/bryte-video/references/brand-rules.md)
+- [Talking head](skills/bryte-video/references/yap.md), [voiceover](skills/bryte-video/references/voiceover.md), and [silent montage](skills/bryte-video/references/montage.md) workflows
+- [Windows installer](install/install.ps1) and [Mac installer](install/install.sh). Both set up the same editor with ffmpeg, whisper.cpp, Python, and the Montserrat fonts. Codex loads the shared skill through a link in its [personal skills folder](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills).
 
 ## Status
-- All three formats built and tested on Windows: talking-head yap, voiceover over b-roll, b-roll montage.
-- Windows installer: tested on Windows 11. Mac installer: written, not yet tested on a Mac.
-- Hosted at https://github.com/LiveBryte/bryte-creator-kit. Creator setup page: `paste/setup.html` (shared link: https://claude.ai/artifact/WdrMEeiSS5YATHu9RaXFtz).
+
+- **Claude**. All three video formats were previously tested on Windows 11.
+- **Codex**. Earlier Windows pilot files include talking-head, voiceover, and silent montage exports. The shareable ZIP uses the included installer and downloads the video tools and transcription model as needed.
+- **Mac**. The installer is available for a pilot on a real Mac.

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BryteMama Creator Kit for Codex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Nunito+Sans:wght@400;600;700&display=swap">
+<style>
+/* One calm column: what you need, then the copy step, then the everyday routine. */
+:root {
+  --bg: #fbf6f2; --card: #ffffff; --ink: #3d2a3a; --soft: #75606f; --line: #ecdcd6;
+  --accent: #9c5f6e; --accent-ink: #ffffff; --done: #5f8a6c; --code: #fdf9f6;
+  --display: "Fraunces", Georgia, serif; --body: "Nunito Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #251b23; --card: #31252f; --ink: #f4e9ef; --soft: #c3adbb; --line: #4a3946;
+  --accent: #e0a3b2; --accent-ink: #2b1d28; --done: #9cc7a8; --code: #2b2029; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #251b23; --card: #31252f; --ink: #f4e9ef; --soft: #c3adbb; --line: #4a3946;
+  --accent: #e0a3b2; --accent-ink: #2b1d28; --done: #9cc7a8; --code: #2b2029; color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font: 17px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 660px; margin: 0 auto; padding-block: 40px 64px; display: grid; gap: 20px; }
+h1 { font: 600 clamp(28px, 6vw, 38px)/1.15 var(--display); margin: 0; text-wrap: balance; }
+h2 { font: 700 13px/1.3 var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); margin: 0 0 10px; }
+.lede { color: var(--soft); margin: 6px 0 0; }
+section { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px; min-width: 0; }
+ol { margin: 0; padding-left: 22px; display: grid; gap: 8px; }
+b { font-weight: 700; }
+kbd { font: 600 14px var(--body); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; background: var(--code); }
+button { margin-top: 16px; width: 100%; border: 0; border-radius: 999px; padding: 15px 24px;
+  background: var(--accent); color: var(--accent-ink); font: 700 18px var(--body); cursor: pointer; }
+button:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+button.copied { background: var(--done); }
+pre { margin: 14px 0 0; white-space: pre-wrap; word-break: break-word; background: var(--code); border: 1px solid var(--line);
+  border-radius: 12px; padding: 14px; font: 14px/1.5 var(--body); max-height: 300px; overflow: auto; }
+.time { font-size: 14px; color: var(--soft); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Set up your BryteMama video kit</h1>
+    <p class="lede">Set up once, then bring Codex a video to get it ready to post.</p>
+  </header>
+  <section aria-labelledby="need">
+    <h2 id="need">Before you start</h2>
+    <ol>
+      <li>Install the <a href="https://chatgpt.com/download/">ChatGPT desktop app</a> for Windows or Mac and sign in. <a href="https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan">Codex is included with ChatGPT Free and paid plans</a>. Usage limits vary.</li>
+      <li>Open <b>Codex</b> in the desktop app. The kit needs a local Codex chat so it can work on your computer.</li>
+      <li>Start a new local chat in Codex.</li>
+    </ol>
+  </section>
+  <section aria-labelledby="go">
+    <h2 id="go">Set it up</h2>
+    <ol>
+      <li>Tap the button to copy your setup message.</li>
+      <li>Click the chat box in Codex, paste (<kbd>Ctrl</kbd>+<kbd>V</kbd> on Windows, <kbd>Cmd</kbd>+<kbd>V</kbd> on Mac) and press Enter.</li>
+      <li>Codex handles the setup. If it asks for approval, it will explain what it needs.</li>
+    </ol>
+    <button id="copy" type="button">Copy setup message</button>
+    <pre id="msg">Hi Codex! I’m a BryteMama creator. Please set up the BryteMama Creator Kit on this computer from https://github.com/LiveBryte/bryte-creator-kit.
+
+I’m new to Codex. Please handle the commands and keep your updates short. If you need me to click something, tell me exactly what to click.
+
+1. Use a local chat in the desktop app with access to this computer. If the chat is remote, help me open a local chat and paste this message there.
+2. Use the kit folder if it’s already open. Otherwise, retrieve the public repository into a fresh folder you can write to. You can download https://github.com/LiveBryte/bryte-creator-kit/archive/refs/heads/main.zip and extract it if Git is unavailable. I don’t need to download or unzip it myself.
+3. Read the README and the installer for my operating system before running it. From the extracted kit folder, run the Windows installer with Windows PowerShell and pass -Assistant Codex, or run bash install/install.sh codex on Mac. Use the normal Codex approval flow if the installer needs internet access or permission to write to my account’s folders. Explain the approval in plain language.
+4. Stay with the setup until it finishes. The first run downloads a transcription model. If a download fails, diagnose the error and retry when useful. If an approval or system prompt requires my input, walk me through it one step at a time.
+5. Confirm that the installer completed successfully, that it added the BryteMama skill for Codex, and that the editor’s check command passed. Then ask me to quit and reopen the desktop app, start a new local Codex chat, and type “check my kit.” If Codex needs help finding the skill after restart, tell me to type $bryte-video check my kit.</pre>
+  </section>
+  <section aria-labelledby="every">
+    <h2 id="every">Every video after that</h2>
+    <ol>
+      <li>Start a new local chat in Codex.</li>
+      <li>Drag in your video (or your voice memo and clips), or tell Codex where you saved them. Then say <b>"make this ready to post"</b>.</li>
+      <li>Your finished video lands in the <b>BryteMama Videos</b> folder on your Desktop.</li>
+    </ol>
+    <p class="time">Three kinds of videos: talking to the camera, talking over clips of your day, or quick clips you can add a sound to when you post.</p>
+  </section>
+</main>
+<script>
+document.getElementById('copy').addEventListener('click', async function () {
+  const text = document.getElementById('msg').textContent;
+  const done = () => { this.textContent = 'Copied! Now paste it into Codex'; this.classList.add('copied'); };
+  try { await navigator.clipboard.writeText(text); done(); }
+  catch (e) {
+    const r = document.createRange(); r.selectNodeContents(document.getElementById('msg'));
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    try { if (document.execCommand('copy')) done(); else this.textContent = 'Text selected. Press Ctrl+C or Cmd+C'; } catch (e2) { this.textContent = 'Text selected: press Ctrl+C or Cmd+C'; }
+  }
+});
+</script>
+</body>
+</html>

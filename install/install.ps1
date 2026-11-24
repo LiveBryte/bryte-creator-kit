@@ -1,11 +1,14 @@
 # BryteMama Creator Kit installer for Windows.
-# Sets up the video tools and adds the kit to Claude. Safe to run again: every step skips itself when done.
+# Sets up the video tools and adds the kit to installed assistants. Safe to run again: every step skips itself when done.
 #
 #   powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1
 #
 # Uses only free tools: ffmpeg (video), whisper.cpp (transcription), Python. Everything the kit adds lives in
 # ~\.bryte-kit, so it never changes other tools' setups. Keep this file ASCII (Windows PowerShell 5.1).
-param([string]$KitZip = 'https://github.com/LiveBryte/bryte-creator-kit/archive/refs/heads/main.zip')
+param(
+  [string]$KitZip = 'https://github.com/LiveBryte/bryte-creator-kit/archive/refs/heads/main.zip',
+  [ValidateSet('Auto', 'Codex', 'Claude')][string]$Assistant = 'Auto'
+)
 
 $ErrorActionPreference = 'Continue'
 $ProgressPreference = 'SilentlyContinue'
@@ -33,6 +36,7 @@ function Refresh-Path {
 # Installs one app with winget. "Already installed" counts as success.
 $WingetAlreadyThere = @(-1978335189, -1978335135)
 function Get-App([string]$id, [string]$label) {
+  if (-not (Has 'winget')) { Fail 'To install the missing tools, install or update App Installer from the Microsoft Store, then run setup again.' }
   Say "  installing $label (Windows may ask to allow changes: click Yes)"
   & winget install --id $id --exact --silent --accept-package-agreements --accept-source-agreements | Out-Null
   $code = $LASTEXITCODE
@@ -48,8 +52,13 @@ Say '1. The BryteMama kit'
 $here = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 if (Test-Path (Join-Path $here '.claude-plugin\marketplace.json')) {
   if ((Resolve-Path $here).Path -ne $KitDir) {
-    Remove-Item $KitDir -Recurse -Force -ErrorAction SilentlyContinue
-    Copy-Item $here $KitDir -Recurse -Force
+    New-Item -ItemType Directory -Path $KitDir -Force -ErrorAction Stop | Out-Null
+    foreach ($entry in @('skills', 'install', '.claude-plugin', '.codex-plugin')) {
+      $source = Join-Path $here $entry
+      if (Test-Path -LiteralPath $source) {
+        Copy-Item -LiteralPath $source -Destination $KitDir -Recurse -Force -ErrorAction Stop
+      }
+    }
   }
 } else {
   $tmp = Join-Path ([IO.Path]::GetTempPath()) ('bryte-' + [guid]::NewGuid())
@@ -63,9 +72,6 @@ if (Test-Path (Join-Path $here '.claude-plugin\marketplace.json')) {
   Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
 }
 Ok "kit in $KitDir"
-
-# 2. winget (comes with Windows 10 and 11) ---------------------------------------
-if (-not (Has 'winget')) { Fail 'This needs App Installer from the Microsoft Store. Install it, then run this again.' }
 
 # 3. ffmpeg ------------------------------------------------------------------------
 Say '2. Video tools (ffmpeg)'
@@ -82,6 +88,8 @@ Say '3. Python'
 function Find-Python {
   $cands = @()
   if (Has 'py') { $cands += (& py -3 -c 'import sys; print(sys.executable)' 2>$null | Select-Object -First 1) }
+  $onPath = Get-Command python.exe -CommandType Application -ErrorAction SilentlyContinue
+  if ($onPath) { $cands += $onPath.Source }
   $cands += (Get-ChildItem @((Join-Path $env:LOCALAPPDATA 'Programs\Python\Python3*\python.exe'), (Join-Path $env:ProgramFiles 'Python3*\python.exe')) -ErrorAction SilentlyContinue |
     Sort-Object FullName -Descending | ForEach-Object { $_.FullName })
   foreach ($c in $cands) {
@@ -120,9 +128,25 @@ if (-not $whisper) {
 }
 Ok 'Whisper'
 
-# 6. Claude's command-line helper (the desktop app keeps it in a hidden folder) ---
-Say '5. Adding the kit to Claude'
-if (-not (Has 'claude')) {
+# 6. Transcription model: the biggest download (about 550 MB) ---------------
+Say '5. Transcription model (about 550 MB, the slow part)'
+$haveModel = (Test-Path (Join-Path $ModelDir $Model)) -or (Test-Path (Join-Path $env:LOCALAPPDATA "whisper.cpp\models\$Model"))
+if (-not $haveModel) {
+  $part = Join-Path $ModelDir "$Model.part"
+  & curl.exe -fL -C - -o $part $ModelUrl
+  if ($LASTEXITCODE -ne 0) { Fail "The model download stopped partway. Run the installer again; it picks up where it left off." }
+  Move-Item $part (Join-Path $ModelDir $Model) -Force
+}
+Ok 'transcription model'
+
+# 7. Final check -----------------------------------------------------------------
+Say '6. Final check'
+$script = Join-Path $KitDir 'skills\bryte-video\scripts\bryte_edit.py'
+& $Py -I $script check
+if ($LASTEXITCODE -ne 0) { Fail 'Something is still missing. Run the installer again.' }
+
+Say '7. Adding the kit to your assistants'
+if ($Assistant -ne 'Codex' -and -not (Has 'claude')) {
   $roots = @((Join-Path $HOME '.local\bin'), (Join-Path $env:APPDATA 'npm'), (Join-Path $env:LOCALAPPDATA 'Claude-Data'),
              (Join-Path $env:APPDATA 'Claude\claude-code'), (Join-Path $env:LOCALAPPDATA 'AnthropicClaude'))
   foreach ($r in $roots) {
@@ -133,38 +157,41 @@ if (-not (Has 'claude')) {
     }
   }
 }
-if (-not (Has 'claude')) { Fail "Couldn't find Claude on this computer. Install the Claude desktop app, then run this again." }
-
-$markets = & claude plugin marketplace list 2>$null | Out-String
-if ($markets -match 'bryte-creator-kit') {
-  & claude plugin marketplace remove bryte-creator-kit *> $null
+$setupCodex = $Assistant -eq 'Codex' -or ($Assistant -eq 'Auto' -and (
+  $env:CODEX_THREAD_ID -or (Has 'codex') -or (Get-AppxPackage -Name 'OpenAI.Codex' -ErrorAction SilentlyContinue)))
+$setupClaude = $Assistant -ne 'Codex' -and (Has 'claude')
+if (-not $setupCodex -and -not $setupClaude) {
+  Fail "Install Codex or Claude on this computer, then run setup again."
 }
-& claude plugin marketplace add $KitDir
-if ($LASTEXITCODE -ne 0) { Fail "Couldn't add the kit to Claude. Run the installer again." }
-$plugins = & claude plugin list 2>$null | Out-String
-if ($plugins -match 'bryte-video@bryte-creator-kit') {
-  & claude plugin update 'bryte-video@bryte-creator-kit' --scope user
-} else {
-  & claude plugin install 'bryte-video@bryte-creator-kit' --scope user
+if ($setupCodex) {
+  $skills = Join-Path $HOME '.agents\skills'
+  $link = Join-Path $skills 'bryte-video'
+  $target = Join-Path $KitDir 'skills\bryte-video'
+  New-Item -ItemType Directory -Force $skills -ErrorAction Stop | Out-Null
+  $existing = Get-Item -LiteralPath $link -Force -ErrorAction SilentlyContinue
+  if (-not $existing) {
+    New-Item -ItemType Junction -Path $link -Target $target -ErrorAction Stop | Out-Null
+  } elseif ($existing.LinkType -notin @('Junction', 'SymbolicLink') -or $existing.Target -ne $target) {
+    Fail "Codex already has a BryteMama skill in a different location."
+  }
+  Ok 'kit added to Codex'
 }
-if ($LASTEXITCODE -ne 0) { Fail "Couldn't turn the kit on in Claude. Run the installer again." }
-Ok 'kit added to Claude'
-
-# 7. Transcription model, last: the biggest download (about 550 MB) ---------------
-Say '6. Transcription model (about 550 MB, the slow part)'
-$haveModel = (Test-Path (Join-Path $ModelDir $Model)) -or (Test-Path (Join-Path $env:LOCALAPPDATA "whisper.cpp\models\$Model"))
-if (-not $haveModel) {
-  $part = Join-Path $ModelDir "$Model.part"
-  & curl.exe -fL -C - -o $part $ModelUrl
-  if ($LASTEXITCODE -ne 0) { Fail "The model download stopped partway. Run the installer again; it picks up where it left off." }
-  Move-Item $part (Join-Path $ModelDir $Model) -Force
+if ($setupClaude) {
+  $markets = & claude plugin marketplace list 2>$null | Out-String
+  if ($markets -match 'bryte-creator-kit') {
+    & claude plugin marketplace remove bryte-creator-kit *> $null
+  }
+  & claude plugin marketplace add $KitDir
+  if ($LASTEXITCODE -ne 0) { Fail "Couldn't add the kit to Claude. Run the installer again." }
+  $plugins = & claude plugin list 2>$null | Out-String
+  if ($plugins -match 'bryte-video@bryte-creator-kit') {
+    & claude plugin update 'bryte-video@bryte-creator-kit' --scope user
+  } else {
+    & claude plugin install 'bryte-video@bryte-creator-kit' --scope user
+  }
+  if ($LASTEXITCODE -ne 0) { Fail "Couldn't turn the kit on in Claude. Run the installer again." }
+  Ok 'kit added to Claude'
 }
-Ok 'transcription model'
 
-# 8. Final check -----------------------------------------------------------------
-Say '7. Final check'
-$script = Join-Path $KitDir 'skills\bryte-video\scripts\bryte_edit.py'
-& $Py -I $script check
-if ($LASTEXITCODE -ne 0) { Fail 'Something is still missing. Run the installer again.' }
 Say ''
-Say 'DONE. Quit Claude, open it again, start a new chat and type: check my kit'
+Say 'DONE. Restart your assistant, start a new chat and type: check my kit'

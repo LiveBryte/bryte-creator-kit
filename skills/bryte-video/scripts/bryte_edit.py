@@ -41,6 +41,11 @@ FONT_DIR = KIT / "fonts"
 FONT_CAP = "Montserrat ExtraBold"
 FONT_HOOK = "Montserrat"
 
+# The desktop app may launch without the shell profile that adds Homebrew.
+if sys.platform == "darwin":
+    brew_bins = [p for p in ("/opt/homebrew/bin", "/usr/local/bin") if Path(p).is_dir()]
+    os.environ["PATH"] = os.pathsep.join([os.environ.get("PATH", ""), *brew_bins]).strip(os.pathsep)
+
 
 # ---------------------------------------------------------------- tools
 def find_whisper():
@@ -255,8 +260,9 @@ def sentences(video, workdir):
 def frame(video, workdir, at):
     workdir.mkdir(parents=True, exist_ok=True)
     out = workdir / f"frame-{at:.1f}.jpg"
+    filters = (TONEMAP if is_hdr(video) else "") + "scale=540:-1:out_range=pc"
     run(["ffmpeg", "-v", "error", "-y", "-ss", str(at), "-i", str(video), "-frames:v", "1",
-         "-vf", "scale=540:-1", str(out)])
+         "-vf", filters, "-pix_fmt", "yuvj420p", str(out)])
     print(out)
 
 
