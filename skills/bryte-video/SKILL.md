@@ -1,6 +1,6 @@
 ---
 name: bryte-video
-description: BryteMama Creator Kit. Turns a creator's phone video into a finished, on-brand BryteMama ad - cuts every pause, adds a text hook and captions, and checks what she said against BryteMama's brand and claim rules before anything is posted. Use whenever a BryteMama creator shares a video, asks to edit, cut, caption or finish a video, asks for hook ideas, asks "is this okay to post", or says "finish my kit setup" / "check my kit".
+description: BryteMama Creator Kit. Edits BryteMama creator videos for submission. When a creator shares footage, trim dead air and export an edited video first, then offer hook, brand and posting suggestions. Use whenever a BryteMama creator shares a video, asks to edit, cut, caption or finish a video, asks for hook ideas, asks "is this okay to post", or says "finish my kit setup" / "check my kit".
 ---
 
 # BryteMama Creator Kit
@@ -51,20 +51,12 @@ Never use a song she didn't make or get from a free library. For montages, the t
 
 ## The flow for every video
 
-The steps below are for a talking-head video. Voiceover and montage follow the same idea (check setup, look, brand check, hook or text, make, check, hand over); their reference files list the exact steps.
+A video attachment by itself is a request for an edit. Start the edit immediately unless the creator expressly requests review only. Use the matching format reference. For speech, removing dead air is the first editing priority. Deliver a submission cut without waiting for brand feedback, a hook selection, or approval of optional changes.
 
-1. **Get the video.** Ask her to drag the video file(s) into this chat (or tell you where they are, like "Downloads"). Find them yourself if she describes them. Phones often save videos as .mov or .mp4: both work.
-2. **Check setup.** Run `check`. Fix anything missing before going on.
-3. **Look and listen.** Run `frame` at 2 seconds and look at the image: is it vertical? Does it already have captions burned in (some apps add them)? Then run `sentences`.
-   **Proofread the words.** The captions are made from `words.json` in the work folder. Read it and fix any misheard words (names, ingredients, "BryteMama" is always one word) by editing that file before you render. If you change the words, keep each word's start and end times.
-4. **Brand check.** Read `references/brand-rules.md` and go through every sentence she said. Sort what you find into:
-   - **Must fix** - anything on the "never say" list. Offer to cut that line (with `--remove`) or tell her the exact line to re-film.
-   - **Worth a look** - prices, discounts, free gifts or offer details (these change, so she should match the current offer from the BryteMama team), and anything you're unsure about.
-   - Tell her the result in a friendly way: "Your video is lovely. Two small things before it's ready to post: ..." Never lecture.
-5. **Hook.** Offer 3 short hook options (under 10 words each) written from what she actually said, following `references/yap.md`. Let her pick or write her own. Check her pick against the brand rules too.
-6. **Make it.** Run `yap` with her hook, any `--remove` cuts she agreed to, and `--no-captions` if the video already has captions burned in. Save to `BryteMama Videos` on her Desktop with a clear name (her name + date).
-7. **Check your work.** Run `frame` on the finished video at 1 second (hook visible?) and around the middle (captions readable, not covering her face?). Fix and re-run if anything looks off.
-8. **Hand it over.** Tell her where the video is, how long it is now, and remind her of the disclosure from `references/brand-rules.md` ("Paid partnership" label or #ad) when she posts.
+1. Run the setup check. Inspect the footage for existing text and transcribe speech for cut timing. Proofread the caption words if generating captions, keeping their timecodes.
+2. Render the first submission cut. Trim pauses and preserve the spoken lines. Keep any existing hook and captions (omit the new hook and use --no-captions when captions are burned in). If there is no hook, use any supplied hook or leave it off the first cut. Save the export to BryteMama Videos on her Desktop.
+3. Verify the export before delivery. Check the opening and middle frames and check the exported audio for remaining dead air. Whisper word timings can span quiet gaps, so use FFmpeg silence detection as a second pass (start with silencedetect=noise=-22dB:d=0.25). Check candidate gaps against the audio so breaths, quiet words, and intentional beats are preserved. Cut confirmed gaps with matching audio and video boundaries, then verify the revised export. For voiceover, make timing repairs before assembling b-roll so captions and visuals stay synced.
+4. After exporting and verifying the cut, review the spoken lines and on-screen text using references/brand-rules.md. Lead the reply with the edited file and its duration. Follow with timestamped fixes or offer checks needed before posting, and suggest a hook if useful. Keep flagged lines in the submission cut unless the creator asks to remove them. Include the disclosure reminder when applicable.
 
 ## Fixing the setup
 

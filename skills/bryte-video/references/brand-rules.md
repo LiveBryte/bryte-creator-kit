@@ -1,6 +1,6 @@
 # BryteMama brand rules for creators
 
-Check every sentence she says, her hook, and any caption against this list before the video is finished. Be kind about it. She's not in trouble; you're helping her post something the brand can use.
+Check every sentence she says, her hook, and any caption against this list before recommending the edited video for posting. Be kind about it. She's not in trouble; you're helping her post something the brand can use.
 
 ## What BryteMama is
 

@@ -20,11 +20,11 @@ If she only has a few clips, that's fine: the kit takes different moments from e
 ## Steps
 
 1. `frame` on her voice file (if it's a video) and on 2-3 clips. Check: vertical? Anything that shouldn't be on screen? (See "Clip check" below.)
-2. `sentences` on her voice file. Proofread `words.json`. Run the brand check on every sentence.
-3. Offer 3 hooks (same rules as `yap.md`).
-4. Ask her clip order only if she cares. Otherwise keep the order she gave them.
+2. `sentences` on her voice file. Proofread `words.json` and check the narration for dead air independently of the word timings.
+3. Use the supplied hook if there is one. Suggest hooks after exporting the first cut.
+4. Keep the supplied clip order unless she requests a different one.
 5. Run `voiceover <voice> <work> --clips <clip1> <clip2> ... --hook "..." [--face-first] [--remove S-E] --out <file>`.
-6. `frame` the finished video at 1 second and in the middle. Check the hook and captions, and that the shots change.
+6. `frame` the finished video at 1 second and in the middle. Check the hook and captions, that the shots change, and that no unintended pauses remain. Deliver the export before offering brand or hook suggestions.
 
 ## Clip check (look at the frames)
 
