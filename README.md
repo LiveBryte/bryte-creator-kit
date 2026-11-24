@@ -21,4 +21,4 @@ No Tesseract, no VideoDatabase or Content Tools, and no account keys inside.
 ## Status
 - All three formats built and tested on Windows: talking-head yap, voiceover over b-roll, b-roll montage.
 - Windows installer: tested on Windows 11. Mac installer: written, not yet tested on a Mac.
-- Hosted at https://github.com/LiveBryte/bryte-creator-kit. Creator setup page: `paste/setup.html`.
+- Hosted at https://github.com/LiveBryte/bryte-creator-kit. Creator setup page: `paste/setup.html` (shared link: https://claude.ai/artifact/WdrMEeiSS5YATHu9RaXFtz).

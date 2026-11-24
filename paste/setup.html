@@ -1,27 +1,60 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BryteMama Kit Setup</title>
+<title>BryteMama Creator Kit</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Nunito+Sans:wght@400;600;700&display=swap">
 <style>
-:root{--bg:#fbf7f3;--card:#ffffff;--ink:#3d2a3a;--soft:#7a6476;--accent:#b5838d;--line:#ead9d4}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,Segoe UI,Helvetica,Arial,sans-serif}
-main{max-width:720px;margin:0 auto;padding:32px 16px 64px}h1{font-size:28px;margin:0 0 6px}.sub{color:var(--soft);margin:0 0 28px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin:0 0 18px}
-ol{padding-left:22px;margin:8px 0}li{margin:8px 0}b{color:var(--ink)}
-button{background:var(--accent);color:#fff;border:0;border-radius:999px;padding:14px 28px;font-size:18px;font-weight:600;cursor:pointer;width:100%}
-button.done{background:#7f9c86}pre{white-space:pre-wrap;background:#fdfaf8;border:1px solid var(--line);border-radius:12px;padding:14px;font-size:14px;max-height:320px;overflow:auto;margin:14px 0 0}
-.note{background:#fff4e5;border-color:#f3d9b1}
-</style></head><body><main>
-<h1>Set up your BryteMama video kit</h1>
-<p class="sub">About 15 minutes, once. After that, you drag in a video and Claude makes it ready to post.</p>
-<div class="card"><b>Before you start</b><ol>
-<li>Install the <b>Claude desktop app</b> from claude.ai/download and sign in. You need a paid plan (Pro or higher).</li>
-<li>Open the app and click the <b>Code</b> tab at the top.</li>
-<li>Start a new chat.</li></ol></div>
-<div class="card"><b>Then</b><ol>
-<li>Click the button below to copy your setup message.</li>
-<li>Click in the chat box in Claude, paste (<b>Ctrl+V</b> on Windows, <b>Cmd+V</b> on Mac) and press Enter.</li>
-<li>Claude does the rest. When it asks for permission, click <b>Allow</b>. If Windows asks to allow changes, click <b>Yes</b>.</li></ol>
-<button id="copy">Copy setup message</button>
-<pre id="p">Hi Claude! Please install the BryteMama Creator Kit on this computer for me.
+/* One calm column: what you need, then the copy step, then the everyday routine. */
+:root {
+  --bg: #fbf6f2; --card: #ffffff; --ink: #3d2a3a; --soft: #75606f; --line: #ecdcd6;
+  --accent: #9c5f6e; --accent-ink: #ffffff; --done: #5f8a6c; --code: #fdf9f6;
+  --display: "Fraunces", Georgia, serif; --body: "Nunito Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #251b23; --card: #31252f; --ink: #f4e9ef; --soft: #c3adbb; --line: #4a3946;
+  --accent: #e0a3b2; --accent-ink: #2b1d28; --done: #9cc7a8; --code: #2b2029; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #251b23; --card: #31252f; --ink: #f4e9ef; --soft: #c3adbb; --line: #4a3946;
+  --accent: #e0a3b2; --accent-ink: #2b1d28; --done: #9cc7a8; --code: #2b2029; color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font: 17px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 660px; margin: 0 auto; padding-block: 40px 64px; display: grid; gap: 20px; }
+h1 { font: 600 clamp(28px, 6vw, 38px)/1.15 var(--display); margin: 0; text-wrap: balance; }
+h2 { font: 700 13px/1.3 var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); margin: 0 0 10px; }
+.lede { color: var(--soft); margin: 6px 0 0; }
+section { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px; min-width: 0; }
+ol { margin: 0; padding-left: 22px; display: grid; gap: 8px; }
+b { font-weight: 700; }
+kbd { font: 600 14px var(--body); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; background: var(--code); }
+button { margin-top: 16px; width: 100%; border: 0; border-radius: 999px; padding: 15px 24px;
+  background: var(--accent); color: var(--accent-ink); font: 700 18px var(--body); cursor: pointer; }
+button:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+button.copied { background: var(--done); }
+pre { margin: 14px 0 0; white-space: pre-wrap; word-break: break-word; background: var(--code); border: 1px solid var(--line);
+  border-radius: 12px; padding: 14px; font: 14px/1.5 var(--body); max-height: 300px; overflow: auto; }
+.time { font-size: 14px; color: var(--soft); }
+</style>
+<main>
+  <header>
+    <h1>Set up your BryteMama video kit</h1>
+    <p class="lede">One-time setup, about 15 minutes. After that, you drag in a video and Claude makes it ready to post.</p>
+  </header>
+  <section aria-labelledby="need">
+    <h2 id="need">Before you start</h2>
+    <ol>
+      <li>Install the <b>Claude desktop app</b> from claude.ai/download and sign in. You need a paid plan (Pro or higher).</li>
+      <li>Open the app and click the <b>Code</b> tab at the top.</li>
+      <li>Start a new chat.</li>
+    </ol>
+  </section>
+  <section aria-labelledby="go">
+    <h2 id="go">Set it up</h2>
+    <ol>
+      <li>Tap the button to copy your setup message.</li>
+      <li>Click the chat box in Claude, paste (<kbd>Ctrl</kbd>+<kbd>V</kbd> on Windows, <kbd>Cmd</kbd>+<kbd>V</kbd> on Mac) and press Enter.</li>
+      <li>Claude does the rest. When it asks permission, click <b>Allow</b>. If Windows asks to allow changes, click <b>Yes</b>.</li>
+    </ol>
+    <button id="copy" type="button">Copy setup message</button>
+    <pre id="msg">Hi Claude! Please install the BryteMama Creator Kit on this computer for me.
 
 About me: I&#x27;m a mom, not a tech person. Keep every message short and friendly, skip the technical details, and tell me what&#x27;s happening every couple of minutes. If you need me to click or type something, tell me exactly what, one step at a time.
 
@@ -42,14 +75,27 @@ Here&#x27;s what to do:
    You&#x27;re all set! One last step:
    1. Quit Claude and open it again.
    2. Start a new chat.
-   3. Type: check my kit</pre></div>
-<div class="card"><b>Every video after that</b><ol>
-<li>Start a new chat in the Code tab.</li><li>Drag your video into the chat and say "make this ready to post".</li>
-<li>Your finished video lands in the <b>BryteMama Videos</b> folder on your Desktop.</li></ol></div>
-</main><script>
-document.getElementById('copy').onclick=async function(){
-  const t=document.getElementById('p').textContent;
-  try{await navigator.clipboard.writeText(t)}catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById('p'));const s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy')}
-  this.textContent='Copied! Now paste it into Claude';this.classList.add('done');
-};
-</script></body></html>
+   3. Type: check my kit</pre>
+  </section>
+  <section aria-labelledby="every">
+    <h2 id="every">Every video after that</h2>
+    <ol>
+      <li>Start a new chat in the Code tab.</li>
+      <li>Drag in your video (or your voice memo and clips) and say <b>"make this ready to post"</b>.</li>
+      <li>Your finished video lands in the <b>BryteMama Videos</b> folder on your Desktop.</li>
+    </ol>
+    <p class="time">Three kinds of videos: talking to the camera, talking over clips of your day, or quick clips set to a song.</p>
+  </section>
+</main>
+<script>
+document.getElementById('copy').addEventListener('click', async function () {
+  const text = document.getElementById('msg').textContent;
+  const done = () => { this.textContent = 'Copied! Now paste it into Claude'; this.classList.add('copied'); };
+  try { await navigator.clipboard.writeText(text); done(); }
+  catch (e) {
+    const r = document.createRange(); r.selectNodeContents(document.getElementById('msg'));
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    try { document.execCommand('copy'); done(); } catch (e2) { this.textContent = 'Text selected: press Ctrl+C or Cmd+C'; }
+  }
+});
+</script>
