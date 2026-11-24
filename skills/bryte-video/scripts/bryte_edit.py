@@ -41,10 +41,20 @@ FONT_DIR = KIT / "fonts"
 FONT_CAP = "Montserrat ExtraBold"
 FONT_HOOK = "Montserrat"
 
-# The desktop app may launch without the shell profile that adds Homebrew.
+# The desktop app may launch without the shell profile that adds Homebrew. On a Mac the kit needs Homebrew's
+# ffmpeg-full (plain ffmpeg has no caption or HDR filters). It is keg-only, so its folder goes first.
 if sys.platform == "darwin":
-    brew_bins = [p for p in ("/opt/homebrew/bin", "/usr/local/bin") if Path(p).is_dir()]
-    os.environ["PATH"] = os.pathsep.join([os.environ.get("PATH", ""), *brew_bins]).strip(os.pathsep)
+    first = [p for p in ("/opt/homebrew/opt/ffmpeg-full/bin", "/usr/local/opt/ffmpeg-full/bin") if Path(p).is_dir()]
+    last = [p for p in ("/opt/homebrew/bin", "/usr/local/bin") if Path(p).is_dir()]
+    os.environ["PATH"] = os.pathsep.join([*first, os.environ.get("PATH", ""), *last]).strip(os.pathsep)
+# On Windows, winget's ffmpeg is on PATH only in apps opened after setup. Find it anyway.
+elif os.name == "nt" and not shutil.which("ffmpeg"):
+    for root in (Path(os.environ.get("LOCALAPPDATA", "")) / "Microsoft" / "WinGet" / "Links",
+                 Path(os.environ.get("LOCALAPPDATA", "")) / "Microsoft" / "WinGet" / "Packages"):
+        hit = next(iter(sorted(root.glob("**/ffmpeg.exe"))), None) if root.is_dir() else None
+        if hit:
+            os.environ["PATH"] = str(hit.parent) + os.pathsep + os.environ.get("PATH", "")
+            break
 
 
 # ---------------------------------------------------------------- tools
@@ -521,15 +531,28 @@ def montage(clips, workdir, text, text_middle, shot, length, music, out):
 
 
 # ---------------------------------------------------------------- check
+def whisper_runs(path):
+    """Actually start Whisper, so a computer missing a runtime library fails at setup, not on her first video."""
+    if not path:
+        return None
+    try:
+        r = subprocess.run([path, "-h"], capture_output=True, text=True, errors="replace", timeout=60)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    return r.returncode == 0 or "usage" in (r.stdout + r.stderr).lower() or None
+
+
 def check():
     ok = True
     ff = shutil.which("ffmpeg")
     for name, value in [("ffmpeg", ff), ("ffprobe", shutil.which("ffprobe")),
                         ("ffmpeg captions and HDR support", ff and has_filters("ass", "zscale", "tonemap") or None),
-                        ("Whisper", find_whisper()), ("transcription model", find_model()),
+                        ("Whisper", whisper_runs(find_whisper())), ("transcription model", find_model()),
                         ("fonts", (FONT_DIR / "Montserrat-ExtraBold.ttf").is_file() or None)]:
         print(("READY   " if value else "MISSING ") + name)
         ok = ok and bool(value)
+    if ff:
+        print(f"ffmpeg to use for any extra checks: {ff}")
     print("ALL READY" if ok else "NOT READY")
     return ok
 

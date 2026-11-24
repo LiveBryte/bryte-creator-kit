@@ -24,6 +24,10 @@ When a creator supplies this URL and asks for setup, follow [SETUP-PROMPT-CODEX.
 
 Open [the Claude setup page](https://claude.ai/artifact/WdrMEeiSS5YATHu9RaXFtz) or copy [the Claude setup message](SETUP-PROMPT.md). Paste it into a new chat in the Claude desktop app's Code tab. After setup, restart Claude and type **check my kit**.
 
+### For Claude
+
+When a creator supplies this URL and asks for setup, follow [SETUP-PROMPT.md](SETUP-PROMPT.md). Run the installer for her operating system with `-Assistant Claude` (Windows) or `claude` (Mac). If the creator only supplied a URL, ask whether she wants to install the kit before running the installer.
+
 ## What's in the kit
 
 - [Shared skill](skills/bryte-video/SKILL.md) and [brand rules](skills/bryte-video/references/brand-rules.md)
@@ -34,4 +38,4 @@ Open [the Claude setup page](https://claude.ai/artifact/WdrMEeiSS5YATHu9RaXFtz) 
 
 - **Claude**. All three video formats were previously tested on Windows 11.
 - **Codex**. Earlier Windows pilot files include talking-head, voiceover, and silent montage exports. The shareable ZIP uses the included installer and downloads the video tools and transcription model as needed.
-- **Mac**. The installer is available for a pilot on a real Mac.
+- **Mac**. The installer is available for a pilot on a real Mac. It needs an Apple-chip Mac (M1 or newer) on macOS 15 or newer, because that's where Homebrew ships ready-made video tools.

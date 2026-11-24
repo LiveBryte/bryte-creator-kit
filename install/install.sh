@@ -23,6 +23,11 @@ has()  { command -v "$1" >/dev/null 2>&1; }
 
 [[ "$(uname -s)" == Darwin ]] || fail "This installer is for Mac. On Windows, use install.ps1."
 case "$ASSISTANT" in auto|codex|claude) ;; *) fail "Choose auto, codex, or claude." ;; esac
+# Homebrew only ships ready-made video tools for Apple-chip Macs on macOS 15 (Sequoia) or newer. Anything older
+# would compile them for hours, so stop with a plain answer instead.
+[[ "$(uname -m)" == arm64 ]] || fail "This Mac has an Intel chip. The kit needs a Mac with an Apple chip (M1 or newer). Ask the BryteMama team for help."
+MACOS_MAJOR="$(sw_vers -productVersion | cut -d. -f1)"
+(( MACOS_MAJOR >= 15 )) || fail "This Mac needs macOS 15 (Sequoia) or newer. Update it in System Settings > General > Software Update, then run setup again."
 mkdir -p "$HOME2" "$MODEL_DIR"
 
 # 1. The kit itself ----------------------------------------------------------------
@@ -70,9 +75,12 @@ ok "Homebrew"
 
 # 3. ffmpeg, Whisper, Python ------------------------------------------------------
 echo "3. Video tools, transcription and Python"
-for pkg in ffmpeg whisper-cpp python@3.12; do
+# ffmpeg-full, not ffmpeg: Homebrew's plain ffmpeg has no caption (libass) or HDR (zimg) filters.
+for pkg in ffmpeg-full whisper.cpp python@3.12; do
   brew list "$pkg" >/dev/null 2>&1 || brew install "$pkg" || fail "Couldn't install $pkg. Run the installer again."
 done
+# ffmpeg-full is keg-only (not linked into Homebrew's bin), so put it first for the final check.
+PATH="$(brew --prefix ffmpeg-full)/bin:$PATH"
 PY="$(brew --prefix python@3.12)/bin/python3.12"
 [[ -x "$PY" ]] || PY="$(command -v python3.12 || command -v python3)"
 "$PY" -c 'import sys; sys.exit(sys.version_info < (3, 8))' || fail "Python didn't finish installing. Run the installer again."
@@ -107,6 +115,9 @@ fi
 setup_claude=0
 if [[ "$ASSISTANT" != codex ]] && has claude; then
   setup_claude=1
+fi
+if [[ "$ASSISTANT" == claude && "$setup_claude" == 0 ]]; then
+  fail "Couldn't find Claude's command-line tool. Open the Claude app's Code tab once, then run setup again."
 fi
 if [[ "$setup_codex" == 0 && "$setup_claude" == 0 ]]; then
   fail "Install Codex or Claude on this Mac, then run setup again."

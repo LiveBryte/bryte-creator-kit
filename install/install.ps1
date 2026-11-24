@@ -160,6 +160,9 @@ if ($Assistant -ne 'Codex' -and -not (Has 'claude')) {
 $setupCodex = $Assistant -eq 'Codex' -or ($Assistant -eq 'Auto' -and (
   $env:CODEX_THREAD_ID -or (Has 'codex') -or (Get-AppxPackage -Name 'OpenAI.Codex' -ErrorAction SilentlyContinue)))
 $setupClaude = $Assistant -ne 'Codex' -and (Has 'claude')
+if ($Assistant -eq 'Claude' -and -not $setupClaude) {
+  Fail "Couldn't find Claude's command-line tool. Open the Claude app's Code tab once, then run setup again."
+}
 if (-not $setupCodex -and -not $setupClaude) {
   Fail "Install Codex or Claude on this computer, then run setup again."
 }
