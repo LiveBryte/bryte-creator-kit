@@ -28,6 +28,12 @@ Open [the Claude setup page](https://claude.ai/artifact/WdrMEeiSS5YATHu9RaXFtz) 
 
 When a creator supplies this URL and asks for setup, follow [SETUP-PROMPT.md](SETUP-PROMPT.md). Run the installer for her operating system with `-Assistant Claude` (Windows) or `claude` (Mac). If the creator only supplied a URL, ask whether she wants to install the kit before running the installer.
 
+## Updating
+
+Creators keep the version they installed until they update. To get the newest kit, type **update my kit** in a new Claude or Codex chat, then quit and reopen the app when it's done. Anyone who installs after a change gets the newest kit automatically.
+
+For maintainers: raise `version` in `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` together on every release. Claude keeps a saved copy of each version, so it won't load changes released under the same version number.
+
 ## What's in the kit
 
 - [Shared skill](skills/bryte-video/SKILL.md) and [brand rules](skills/bryte-video/references/brand-rules.md)

@@ -1,6 +1,6 @@
 ---
 name: bryte-video
-description: BryteMama Creator Kit. Edits BryteMama creator videos for submission. When a creator shares footage, trim dead air and export an edited video first, then offer hook, brand and posting suggestions. Use whenever a BryteMama creator shares a video, asks to edit, cut, caption or finish a video, asks for hook ideas, asks "is this okay to post", or says "finish my kit setup" / "check my kit".
+description: BryteMama Creator Kit. Edits BryteMama creator videos for submission. When a creator shares footage, trim dead air and export an edited video first, then offer hook, brand and posting suggestions. Use whenever a BryteMama creator shares a video, asks to edit, cut, caption or finish a video, asks for hook ideas, asks "is this okay to post", or says "finish my kit setup" / "check my kit" / "update my kit".
 ---
 
 # BryteMama Creator Kit
@@ -63,3 +63,18 @@ A video attachment by itself is a request for an edit. Start the edit immediatel
 If anything is missing, re-run the installer for her computer from `~/.bryte-kit/kit/install/` (Windows: `install.ps1` with PowerShell `-ExecutionPolicy Bypass`; Mac: `install.sh` with bash). In Codex, use `-Assistant Codex` on Windows or `codex` on Mac and use the normal approval flow for writes outside the workspace. It skips what's already installed. If Windows asks to allow changes, tell her to click **Yes**. On a Mac, if a window asks for her password, tell her to type her computer password and click OK.
 
 When she says "finish my kit setup" or "check my kit": run `check`, fix anything missing, then tell her she's ready and that she can drag in her first video any time.
+
+## Updating the kit
+
+When she says "update my kit" (or "get the latest kit"), install the newest version from the internet. Don't use the copy already in `~/.bryte-kit/kit`: it only reinstalls the version she has.
+
+1. Tell her: "Getting the newest version of your kit. This takes a minute or two."
+2. Download the installer for her computer into a new temporary folder and read it before running it:
+   - Windows: https://raw.githubusercontent.com/LiveBryte/bryte-creator-kit/main/install/install.ps1
+   - Mac: https://raw.githubusercontent.com/LiveBryte/bryte-creator-kit/main/install/install.sh
+3. Run it from that temporary folder for the assistant you are:
+   - Claude: Windows `powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -Assistant Claude`, Mac `bash install.sh claude`.
+   - Codex: Windows `powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1 -Assistant Codex`, Mac `bash install.sh codex`. Use the normal approval flow for internet access and writes outside the workspace.
+   A downloaded installer fetches the newest kit from GitHub and replaces the old copy. The tools and the transcription model are already installed, so it skips those.
+4. When it prints DONE, tell her: "Your kit is up to date. Quit the app and open it again, then start a new chat." The new version loads in a new chat after the restart.
+5. If it fails, run it again once. If it still fails, tell her in one plain sentence and keep using the version she has.
