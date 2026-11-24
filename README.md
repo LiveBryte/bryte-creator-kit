@@ -8,7 +8,7 @@ Open Codex in the ChatGPT desktop app on Windows or Mac. Start a local chat and 
 
 > I'm a BryteMama creator. Please install the BryteMama Creator Kit on this computer from https://github.com/LiveBryte/bryte-creator-kit.
 
-If you pasted the GitHub link by itself and Codex asks what you want to do, reply **Install the BryteMama Creator Kit**. You can also paste the [full setup message](SETUP-PROMPT-CODEX.md).
+If you pasted the GitHub link by itself and Codex asks what you want to do, reply **Install the BryteMama Creator Kit**. You can also open [the Codex setup page](https://claude.ai/artifact/NwqRCof5UqzELdesrVhhXx) or paste the [full setup message](SETUP-PROMPT-CODEX.md).
 
 Codex downloads the kit and runs setup. If it asks for approval, it will explain what it needs. The first setup includes a large download and can take a few minutes.
 
