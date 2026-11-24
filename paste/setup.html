@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BryteMama Kit Setup</title>
+<style>
+:root{--bg:#fbf7f3;--card:#ffffff;--ink:#3d2a3a;--soft:#7a6476;--accent:#b5838d;--line:#ead9d4}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,Segoe UI,Helvetica,Arial,sans-serif}
+main{max-width:720px;margin:0 auto;padding:32px 16px 64px}h1{font-size:28px;margin:0 0 6px}.sub{color:var(--soft);margin:0 0 28px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin:0 0 18px}
+ol{padding-left:22px;margin:8px 0}li{margin:8px 0}b{color:var(--ink)}
+button{background:var(--accent);color:#fff;border:0;border-radius:999px;padding:14px 28px;font-size:18px;font-weight:600;cursor:pointer;width:100%}
+button.done{background:#7f9c86}pre{white-space:pre-wrap;background:#fdfaf8;border:1px solid var(--line);border-radius:12px;padding:14px;font-size:14px;max-height:320px;overflow:auto;margin:14px 0 0}
+.note{background:#fff4e5;border-color:#f3d9b1}
+</style></head><body><main>
+<h1>Set up your BryteMama video kit</h1>
+<p class="sub">About 15 minutes, once. After that, you drag in a video and Claude makes it ready to post.</p>
+<div class="card"><b>Before you start</b><ol>
+<li>Install the <b>Claude desktop app</b> from claude.ai/download and sign in. You need a paid plan (Pro or higher).</li>
+<li>Open the app and click the <b>Code</b> tab at the top.</li>
+<li>Start a new chat.</li></ol></div>
+<div class="card"><b>Then</b><ol>
+<li>Click the button below to copy your setup message.</li>
+<li>Click in the chat box in Claude, paste (<b>Ctrl+V</b> on Windows, <b>Cmd+V</b> on Mac) and press Enter.</li>
+<li>Claude does the rest. When it asks for permission, click <b>Allow</b>. If Windows asks to allow changes, click <b>Yes</b>.</li></ol>
+<button id="copy">Copy setup message</button>
+<pre id="p">Hi Claude! Please install the BryteMama Creator Kit on this computer for me.
+
+About me: I&#x27;m a mom, not a tech person. Keep every message short and friendly, skip the technical details, and tell me what&#x27;s happening every couple of minutes. If you need me to click or type something, tell me exactly what, one step at a time.
+
+Please handle all the commands yourself. Don&#x27;t ask me to open any other app or type commands.
+
+Here&#x27;s what to do:
+1. Find out if this is a Windows computer or a Mac, then download its installer and read it before running it:
+   - Windows: https://raw.githubusercontent.com/LiveBryte/bryte-creator-kit/main/install/install.ps1 (run it with PowerShell: -NoProfile -ExecutionPolicy Bypass -File)
+   - Mac: https://raw.githubusercontent.com/LiveBryte/bryte-creator-kit/main/install/install.sh (run it with bash)
+2. It takes about 10 minutes, mostly one big download. Run it in the background and keep me posted.
+3. If it stops partway, just run it again. It continues where it left off. If it keeps failing, figure out why and fix it. Only ask me if you&#x27;re truly stuck.
+4. Things I might need to do:
+   - Windows asks &quot;Do you want to allow this app to make changes to your device?&quot;: tell me to click Yes.
+   - A Mac window asks for my password: tell me to type my computer password and click OK.
+   - Claude asks permission to run something: tell me which button to click (Allow).
+5. When it says DONE, finish with exactly this:
+
+   You&#x27;re all set! One last step:
+   1. Quit Claude and open it again.
+   2. Start a new chat.
+   3. Type: check my kit</pre></div>
+<div class="card"><b>Every video after that</b><ol>
+<li>Start a new chat in the Code tab.</li><li>Drag your video into the chat and say "make this ready to post".</li>
+<li>Your finished video lands in the <b>BryteMama Videos</b> folder on your Desktop.</li></ol></div>
+</main><script>
+document.getElementById('copy').onclick=async function(){
+  const t=document.getElementById('p').textContent;
+  try{await navigator.clipboard.writeText(t)}catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById('p'));const s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy')}
+  this.textContent='Copied! Now paste it into Claude';this.classList.add('done');
+};
+</script></body></html>

@@ -1,0 +1,14 @@
+{
+  "name": "bryte-creator-kit",
+  "description": "BryteMama's video kit for its creators.",
+  "owner": {
+    "name": "BryteMama"
+  },
+  "plugins": [
+    {
+      "name": "bryte-video",
+      "source": "./",
+      "description": "Turns a mom's phone video into a finished, on-brand BryteMama ad."
+    }
+  ]
+}
